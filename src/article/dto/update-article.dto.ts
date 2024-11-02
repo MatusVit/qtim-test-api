@@ -1,4 +1,14 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateArticleDto } from './create-article.dto';
+import { IsNotEmpty, IsString, ValidateIf } from 'class-validator';
+import { IArticle } from 'src/schemas/IArticle';
 
-export class UpdateArticleDto extends PartialType(CreateArticleDto) {}
+export class UpdateArticleDto implements IArticle {
+  @ValidateIf((o) => o.content === null)
+  @IsString()
+  @IsNotEmpty()
+  title: string | null;
+
+  @ValidateIf((o) => o.title === null)
+  @IsString()
+  @IsNotEmpty()
+  content: string | null;
+}

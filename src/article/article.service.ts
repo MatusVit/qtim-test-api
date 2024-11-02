@@ -1,26 +1,54 @@
 import { Injectable } from '@nestjs/common';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
+import { IArticle } from 'src/schemas/IArticle';
 
 @Injectable()
 export class ArticleService {
+  private db = new Map<number, IArticle>();
+
   create(createArticleDto: CreateArticleDto) {
-    return 'This action adds a new article';
+    const id = this.db.size + 1;
+    const nowDate: string = new Date().toISOString();
+    const article = {
+      ...createArticleDto,
+      id,
+      author: {
+        id: 1,
+        name: 'John Doe',
+      },
+      date: nowDate,
+      createdAt: nowDate,
+      updatedAt: nowDate,
+    };
+    this.db.set(id, article);
+
+    return article;
   }
 
   findAll() {
-    return `This action returns all article`;
+    return Array.from(this.db.values());
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} article`;
+    return this.db.get(id);
   }
 
   update(id: number, updateArticleDto: UpdateArticleDto) {
-    return `This action updates a #${id} article`;
+    const article = this.db.get(id);
+    if (!article) {
+      return null;
+    }
+    const updatedArticle = {
+      ...article,
+      ...updateArticleDto,
+      updatedAt: new Date().toISOString(),
+    };
+    this.db.set(id, updatedArticle);
+    return updatedArticle;
   }
 
   remove(id: number) {
-    return `This action removes a #${id} article`;
+    this.db.delete(id);
   }
 }
