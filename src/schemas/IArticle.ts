@@ -5,7 +5,7 @@ export interface IArticle {
   title?: string;
   content?: string;
   author?: IUser;
-  date?: string;
-  createdAt?: string;
-  updatedAt?: string;
+  date?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

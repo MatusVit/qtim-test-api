@@ -12,9 +12,9 @@ export class UserEntity implements IUser {
   @Exclude()
   refreshToken: string;
 
-  createdAt: string;
+  createdAt: Date;
 
-  updatedAt: string;
+  updatedAt: Date;
 
   constructor(partial: Partial<UserEntity>) {
     Object.assign(this, partial);

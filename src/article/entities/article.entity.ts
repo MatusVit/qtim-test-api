@@ -1,34 +1,34 @@
-import { IUser } from 'src/schemas/IUser';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { IArticle } from 'src/schemas/IArticle';
-import { Exclude } from 'class-transformer';
+import { User } from 'src/users/entities/user.entity';
 
-class Author implements IUser {
-  id: number;
-  name: string;
-
-  @Exclude()
-  email: string;
-
-  @Exclude()
-  password: string;
-
-  @Exclude()
-  createdAt: string;
-
-  @Exclude()
-  updatedAt: string;
-
-  constructor(partial: Partial<Author>) {
-    Object.assign(this, partial);
-  }
-}
-
+@Entity('article')
 export class Article implements IArticle {
-  id: number;
+  @PrimaryGeneratedColumn()
+  articleId: number;
+
+  @Column()
   title: string;
+
+  @Column('text')
   content: string;
-  author: Author;
-  date: string;
-  createdAt: string;
-  updatedAt: string;
+
+  @ManyToOne(() => User, (author) => author.articles)
+  author: User;
+
+  @Column({ type: 'date' })
+  date: Date;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

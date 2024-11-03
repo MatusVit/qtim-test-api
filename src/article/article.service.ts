@@ -1,54 +1,51 @@
 import { Injectable } from '@nestjs/common';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
-import { IArticle } from 'src/schemas/IArticle';
+import { Article } from './entities/article.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { IUser } from 'src/schemas/IUser';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ArticleService {
-  private db = new Map<number, IArticle>();
+  // eslint-disable-next-line no-unused-vars
+  constructor(@InjectRepository(Article) private articleRepository: Repository<Article>) {}
 
-  create(createArticleDto: CreateArticleDto) {
-    const id = this.db.size + 1;
-    const nowDate: string = new Date().toISOString();
+  create(dto: CreateArticleDto, user: IUser): Promise<Article> {
     const article = {
-      ...createArticleDto,
-      id,
-      author: {
-        id: 1,
-        name: 'John Doe',
-      },
-      date: nowDate,
-      createdAt: nowDate,
-      updatedAt: nowDate,
+      ...dto,
+      author: { userId: user.userId },
     };
-    this.db.set(id, article);
-
-    return article;
+    return this.articleRepository.save(article);
   }
 
-  findAll() {
-    return Array.from(this.db.values());
+  findAll(): Promise<Article[]> {
+    // todo сделать пагинацию и фильтр
+    return this.articleRepository.find({
+      relations: ['author'],
+    });
   }
 
-  findOne(id: number) {
-    return this.db.get(id);
+  async findOne(articleId: number): Promise<Article | null> {
+    return await this.articleRepository.findOne({
+      where: { articleId },
+      relations: ['author'],
+    });
   }
 
-  update(id: number, updateArticleDto: UpdateArticleDto) {
-    const article = this.db.get(id);
+  async update(articleId: number, updateArticleDto: UpdateArticleDto) {
+    const article = await this.articleRepository.findOne({ where: { articleId } });
     if (!article) {
       return null;
     }
     const updatedArticle = {
       ...article,
       ...updateArticleDto,
-      updatedAt: new Date().toISOString(),
     };
-    this.db.set(id, updatedArticle);
-    return updatedArticle;
+    return this.articleRepository.save(updatedArticle);
   }
 
-  remove(id: number) {
-    this.db.delete(id);
+  async remove(articleId: number): Promise<void> {
+    this.articleRepository.delete({ articleId });
   }
 }

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, ValidateIf } from 'class-validator';
+import { IsDate, IsNotEmpty, IsString, ValidateIf } from 'class-validator';
 import { IArticle } from 'src/schemas/IArticle';
 
 export class UpdateArticleDto implements IArticle {
@@ -11,4 +11,9 @@ export class UpdateArticleDto implements IArticle {
   @IsString()
   @IsNotEmpty()
   content: string | null;
+
+  @ValidateIf((o) => o.title === null)
+  @IsDate()
+  @IsNotEmpty()
+  date: Date | null;
 }

@@ -5,7 +5,6 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  Req,
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
@@ -16,9 +15,10 @@ import { AuthService } from './auth.service';
 import { SingUpDto } from './dto/singup.dto';
 import { Public } from 'src/common/decorators/public.decorator';
 import { RefreshTokenGuard } from 'src/common/guards/refreshToken.guard';
-import { Request } from 'express';
+import { ReqUser } from 'src/common/decorators/user.decorator';
 import { IUser } from 'src/schemas/IUser';
-import { UserEntity } from './entities/newUser.entity';
+import { RefreshDto } from './dto/refresh.dto';
+import { User } from 'src/users/entities/user.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -30,7 +30,7 @@ export class AuthController {
   @HttpCode(HttpStatus.CREATED)
   async signup(@Body() dto: SingUpDto): Promise<IUser> {
     const user = await this.authService.signup(dto);
-    return plainToInstance(UserEntity, user);
+    return plainToInstance(User, user);
   }
 
   @Public()
@@ -44,12 +44,11 @@ export class AuthController {
   @UseGuards(RefreshTokenGuard)
   @Post('/refresh')
   @HttpCode(HttpStatus.OK)
-  async refresh(@Req() req: Request): Promise<Tokens> {
-    const { body, user } = req;
-
+  async refresh(@ReqUser() user: IUser, @Body() dto: RefreshDto): Promise<Tokens> {
+    // ! *** проверить тип user
     if (Date.now() >= user['exp'] * 1000)
       throw new UnauthorizedException(MESSAGE.EXPIRED_REFRESH_TOKEN);
 
-    return await this.authService.refresh(user.userId, body.refreshToken);
+    return await this.authService.refresh(user.userId, dto.refreshToken);
   }
 }
