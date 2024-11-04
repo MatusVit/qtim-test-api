@@ -41,7 +41,19 @@ services:
     networks:
       - container-net
 
-    # redis:
+  redis:
+    container_name: '${REDIS_NAME}-dev'
+    image: redis:7.4-alpine
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - ${REDIS_FILE_LOCATION}:/data:rw
+    restart: unless-stopped
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      - container-net
 
 networks:
   container-net:

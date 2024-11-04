@@ -1,4 +1,5 @@
-import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
+import { instanceToPlain } from 'class-transformer';
+import { BadRequestException, ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { Article } from './entities/article.entity';
@@ -8,10 +9,14 @@ import { Repository } from 'typeorm';
 import { FindArticleDto } from './dto/find-article.dto';
 import { ArticlePagination } from './entities/article-pagination.entity';
 import { MESSAGE } from 'src/common/constants/massages';
+import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Injectable()
 export class ArticleService {
-  constructor(@InjectRepository(Article) private articleRepository: Repository<Article>) {}
+  constructor(
+    @InjectRepository(Article) private articleRepository: Repository<Article>,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+  ) {}
 
   create(dto: CreateArticleDto, user: IUser): Promise<Article> {
     const article = {
@@ -22,6 +27,12 @@ export class ArticleService {
   }
 
   async findAll(page: number, limit: number, filter?: FindArticleDto): Promise<ArticlePagination> {
+    const cacheKey = `articles_page_${page}_limit_${limit}_filter_${JSON.stringify(filter)}`;
+    const cachedArticles = await this.cacheManager.get<ArticlePagination>(cacheKey);
+
+    if (cachedArticles) {
+      return cachedArticles;
+    }
     const queryBuilder = this.articleRepository
       .createQueryBuilder('article')
       .select([
@@ -70,14 +81,28 @@ export class ArticleService {
 
     const [articles, total] = await queryBuilder.getManyAndCount();
 
-    return { data: articles, total, page };
+    const result = { data: articles, total, page };
+    await this.cacheManager.set(cacheKey, instanceToPlain(result), 60000);
+    return result;
   }
 
   async findOne(articleId: number): Promise<Article | null> {
-    return await this.articleRepository.findOne({
+    const cacheKey = `article_${articleId}`;
+    const cachedArticle = await this.cacheManager.get<Article>(cacheKey);
+
+    if (cachedArticle) {
+      return cachedArticle;
+    }
+
+    const article = await this.articleRepository.findOne({
       where: { articleId },
       relations: ['author'],
     });
+
+    if (article) {
+      await this.cacheManager.set(cacheKey, instanceToPlain(article), 60000);
+    }
+    return article;
   }
 
   async update(articleId: number, updateArticleDto: UpdateArticleDto, user: IUser) {
@@ -92,6 +117,8 @@ export class ArticleService {
       ...article,
       ...updateArticleDto,
     };
+    await this.clearArticleCache(articleId);
+
     return this.articleRepository.save(updatedArticle);
   }
 
@@ -103,7 +130,15 @@ export class ArticleService {
     if (article.authorUserId !== user.userId) {
       throw new ForbiddenException(MESSAGE.NO_ACCESS);
     }
+    await this.clearArticleCache(articleId);
 
-    this.articleRepository.delete({ articleId });
+    await this.articleRepository.delete({ articleId });
+  }
+
+  private async clearArticleCache(articleId: number) {
+    await this.cacheManager.del(`article_${articleId}`);
+
+    const keys = (await this.cacheManager.store.keys('articles_page_*')) as string[];
+    await Promise.all(keys.map((key) => this.cacheManager.del(key)));
   }
 }
