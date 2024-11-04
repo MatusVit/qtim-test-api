@@ -6,7 +6,7 @@ import { Article } from './entities/article.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IUser } from 'src/schemas/IUser';
 import { Repository } from 'typeorm';
-import { FindArticleDto } from './dto/find-article.dto';
+import { ListArticleDto } from './dto/list-article.dto';
 import { ArticlePagination } from './entities/article-pagination.entity';
 import { MESSAGE } from 'src/common/constants/massages';
 import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
@@ -26,7 +26,7 @@ export class ArticleService {
     return this.articleRepository.save(article);
   }
 
-  async findAll(page: number, limit: number, filter?: FindArticleDto): Promise<ArticlePagination> {
+  async findAll(page: number, limit: number, filter?: ListArticleDto): Promise<ArticlePagination> {
     const cacheKey = `articles_page_${page}_limit_${limit}_filter_${JSON.stringify(filter)}`;
     const cachedArticles = await this.cacheManager.get<ArticlePagination>(cacheKey);
 

@@ -18,7 +18,7 @@ import { Public } from 'src/common/decorators/public.decorator';
 import { ReqUser } from 'src/common/decorators/user.decorator';
 import { IUser } from 'src/schemas/IUser';
 import { Article } from './entities/article.entity';
-import { FindArticleDto } from './dto/find-article.dto';
+import { ListArticleDto } from './dto/list-article.dto';
 import { ArticlePagination } from './entities/article-pagination.entity';
 import { PaginationQueryDto } from './dto/pagination.dto';
 
@@ -33,10 +33,10 @@ export class ArticleController {
   }
 
   @Public()
-  @Post('find')
+  @Post('list')
   findAll(
     @Query() query: PaginationQueryDto,
-    @Body() filter: FindArticleDto,
+    @Body() filter: ListArticleDto,
   ): Promise<ArticlePagination> {
     const { page = 1, limit = 10 } = query;
     return this.articleService.findAll(page, limit, filter);

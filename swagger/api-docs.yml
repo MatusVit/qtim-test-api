@@ -1,0 +1,344 @@
+openapi: 3.0.3
+info:
+  title: Test Article API
+  description: API documentation
+  version: 1.0.0
+
+servers:
+  - url: /api
+tags:
+  - name: auth
+    description: Авторизация пользователя
+
+  - name: article
+    description: CRUD для статей
+
+paths:
+  /auth/signup:
+    post:
+      tags:
+        - auth
+      summary: Регистрация
+      description: Регистрация нового пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                login:
+                  type: string
+                  example: john_doe
+                name:
+                  type: string
+                  example: John Doe
+                email:
+                  type: string
+                  example: john@example.com
+                password:
+                  type: string
+                  example: securepassword
+      responses:
+        '201':
+          description: Пользователь зарегистрирован
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: integer
+                    example: 1
+                  login:
+                    type: string
+                    example: john_doe
+                  name:
+                    type: string
+                    example: John Doe
+                  email:
+                    type: string
+                    example: john@example.com
+
+  /auth/login:
+    post:
+      tags:
+        - auth
+      summary: Авторизация
+      description: Авторизация пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                login:
+                  type: string
+                  example: user1
+                password:
+                  type: string
+                  example: 55555
+      responses:
+        '200':
+          description: Пользователь авторизован
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                  refreshToken:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+  /auth/refresh:
+    post:
+      tags:
+        - auth
+      summary: Refresh Token
+      description: Обновление токена
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken:
+                  type: string
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+      responses:
+        '200':
+          description: Токен обновлен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                  refreshToken:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        '401':
+          description: Unauthorized, invalid or expired refresh token
+
+  /article:
+    post:
+      tags:
+        - article
+      summary: Новая статья
+      operationId: Создание статьи
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: 'Заголовок новой статьи'
+                content:
+                  type: string
+                  example: 'Содержание новой статьи....'
+      responses:
+        '201':
+          description: Создано новая статья
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Article'
+      security:
+        - bearerAuth: []
+
+  /article/list:
+    post:
+      tags:
+        - article
+      summary: Получение списка статей с пагинацией и фильтрацией
+      operationId: listArticle
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: 'Article 4'
+                author:
+                  type: string
+                  example: 'One'
+                publishDate:
+                  properties:
+                    mode:
+                      type: string
+                      example: 'before'
+                      description: 'before or after'
+                    date:
+                      type: string
+                      example: '2024-01-01'
+      responses:
+        '201':
+          description: Article created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Article'
+
+  /article/{articleId}:
+    get:
+      tags:
+        - article
+      summary: Получение статьи по ID
+      operationId: getArticleById
+      parameters:
+        - name: articleId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Статья получена успешно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Article'
+        '404':
+          description: Article not found
+
+    patch:
+      summary: Обновление статьи по ID
+      operationId: updateArticle
+      tags:
+        - article
+      parameters:
+        - name: articleId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: 'Updated Title'
+                content:
+                  type: string
+                  example: 'Updated content for the article...'
+                date:
+                  type: string
+                  example: '2024-11-03T14:00:00Z'
+      responses:
+        '200':
+          description: Article updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Article'
+        '404':
+          description: Article not found
+      security:
+        - bearerAuth: []
+
+    delete:
+      summary: Удаление статьи по ID
+      operationId: deleteArticle
+      tags:
+        - article
+      parameters:
+        - name: articleId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Article deleted successfully
+        '404':
+          description: Article not found
+      security:
+        - bearerAuth: []
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Article:
+      type: object
+      properties:
+        articleId:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: 'Understanding NestJS'
+        content:
+          type: string
+          example: 'NestJS is a progressive Node.js framework for building efficient...'
+        author:
+          $ref: '#/components/schemas/User'
+        authorUserId:
+          type: integer
+          example: 1
+        date:
+          type: string
+          format: date
+          example: '2024-11-04'
+        createdAt:
+          type: string
+          format: date-time
+          example: '2024-11-04T10:00:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          example: '2024-11-04T10:00:00Z'
+
+    ArticlePagination:
+      type: object
+      properties:
+        total:
+          type: integer
+          example: 100
+        page:
+          type: integer
+          example: 1
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Article'
+
+    User:
+      type: object
+      properties:
+        userId:
+          type: integer
+          example: 1
+        login:
+          type: string
+          example: 'john_doe'
+        name:
+          type: string
+          example: 'John Doe'
+        email:
+          type: string
+          example: 'john@example.com'
+        articles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Article'

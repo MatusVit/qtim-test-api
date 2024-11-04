@@ -11,7 +11,7 @@ class PublishDateFilterDto {
   mode?: 'before' | 'after';
 }
 
-export class FindArticleDto {
+export class ListArticleDto {
   @IsOptional()
   @IsString()
   title?: string;
