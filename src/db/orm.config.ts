@@ -12,7 +12,7 @@ export const AppDataSource = new DataSource({
   password: process.env.POSTGRES_PASSWORD || 'password',
   database: process.env.POSTGRES_DB || 'qtim_api_db',
   entities: [User, Article],
-  migrations: [InitialMigration1730650002384],
+  migrations: [InitialMigration1730650002384, SeedUserAndArticleData1730651382019],
   synchronize: false,
   logging: true,
 });

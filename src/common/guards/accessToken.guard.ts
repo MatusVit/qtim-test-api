@@ -6,9 +6,7 @@ import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
 @Injectable()
 export class AccessTokenGuard implements CanActivate {
   constructor(
-    // eslint-disable-next-line no-unused-vars
     private reflector: Reflector,
-    // eslint-disable-next-line no-unused-vars
     private jwtService: JwtService,
   ) {}
 

@@ -3,7 +3,6 @@ import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class RefreshTokenGuard implements CanActivate {
-  // eslint-disable-next-line no-unused-vars
   constructor(private jwtService: JwtService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

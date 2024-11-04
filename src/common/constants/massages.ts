@@ -7,4 +7,6 @@ export const MESSAGE = {
   BAD_PASSWORD: 'Invalid password',
   USER_NOT_EXIST: `User doesn't exist`,
   PASSWORD_WRONG: `Old Password is wrong`,
+  NO_ACCESS: `No access`,
+  ENTITY_NOT_FOUND: `Entity not found`,
 };

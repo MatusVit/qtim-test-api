@@ -22,7 +22,6 @@ import { User } from 'src/users/entities/user.entity';
 
 @Controller('auth')
 export class AuthController {
-  // eslint-disable-next-line no-unused-vars
   constructor(private authService: AuthService) {}
 
   @Public()

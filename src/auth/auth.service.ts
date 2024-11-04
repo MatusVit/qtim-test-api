@@ -13,9 +13,7 @@ import { IUser } from 'src/schemas/IUser';
 @Injectable()
 export class AuthService {
   constructor(
-    // eslint-disable-next-line no-unused-vars
     private usersService: UsersService,
-    // eslint-disable-next-line no-unused-vars
     private jwtService: JwtService,
   ) {}
 

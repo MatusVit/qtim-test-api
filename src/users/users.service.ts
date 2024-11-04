@@ -9,7 +9,6 @@ import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
-  // eslint-disable-next-line no-unused-vars
   constructor(@InjectRepository(User) private usersRepository: Repository<User>) {}
 
   async findOneByLogin(login: string): Promise<User | null> {

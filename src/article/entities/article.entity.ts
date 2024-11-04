@@ -23,6 +23,9 @@ export class Article implements IArticle {
   @ManyToOne(() => User, (author) => author.articles)
   author: User;
 
+  @Column({ name: 'authorUserId' })
+  authorUserId: number;
+
   @Column({ type: 'date' })
   date: Date;
 
