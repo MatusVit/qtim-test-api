@@ -31,6 +31,12 @@ _Docker must be installed and running on your system._
 $ npm up:db:docker
 ```
 
+Down DB containers
+
+```bash
+$ npm down:db:docker
+```
+
 ## Compile and run the project
 
 ```bash
