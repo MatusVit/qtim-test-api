@@ -1,4 +1,4 @@
-import { IUser } from 'src/schemas/IUser';
+import { IUser } from '../../schemas/IUser';
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
 export class SingUpDto implements IUser {

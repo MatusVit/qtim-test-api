@@ -1,4 +1,4 @@
-import { IJwtPayload } from 'src/schemas/IJwtPayload';
+import { IJwtPayload } from '../../schemas/IJwtPayload';
 
 declare module 'express' {
   export interface Request {

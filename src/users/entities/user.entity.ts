@@ -6,8 +6,8 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { IUser } from 'src/schemas/IUser';
-import { Article } from 'src/article/entities/article.entity';
+import { IUser } from '../../schemas/IUser';
+import { Article } from '../../article/entities/article.entity';
 import { Exclude } from 'class-transformer';
 
 @Entity()

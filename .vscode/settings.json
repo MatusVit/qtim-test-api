@@ -14,7 +14,9 @@
         "editor.defaultFormatter": "vscode.json-language-features"
     },
     "cSpell.words": [
+        "qtim",
         "singup",
+        "testuser",
         "typeorm",
         "авторизационные"
     ]

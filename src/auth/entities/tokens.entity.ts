@@ -1,4 +1,4 @@
-import { ITokens } from 'src/schemas/ITokens';
+import { ITokens } from '../../schemas/ITokens';
 
 export class Tokens implements ITokens {
   accessToken: string;

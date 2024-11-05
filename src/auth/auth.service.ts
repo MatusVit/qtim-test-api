@@ -1,14 +1,14 @@
 import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../users/users.service';
 import { LoginDto } from './dto/auth.dto';
-import { MESSAGE } from 'src/common/constants/massages';
-import { compareData, getHash } from 'src/common/utils/hash.utils';
+import { MESSAGE } from '../common/constants/massages';
+import { compareData, getHash } from '../common/utils/hash.utils';
 import { plainToInstance } from 'class-transformer';
 import { SingUpDto } from './dto/singup.dto';
 import { Tokens } from './entities/tokens.entity';
-import { IJwtPayload } from 'src/schemas/IJwtPayload';
+import { IJwtPayload } from '../schemas/IJwtPayload';
 import { JwtService } from '@nestjs/jwt';
-import { IUser } from 'src/schemas/IUser';
+import { IUser } from '../schemas/IUser';
 
 @Injectable()
 export class AuthService {

@@ -13,12 +13,12 @@ import { Tokens } from './entities/tokens.entity';
 import { MESSAGE } from './../common/constants/massages';
 import { AuthService } from './auth.service';
 import { SingUpDto } from './dto/singup.dto';
-import { Public } from 'src/common/decorators/public.decorator';
-import { RefreshTokenGuard } from 'src/common/guards/refreshToken.guard';
-import { ReqUser } from 'src/common/decorators/user.decorator';
-import { IUser } from 'src/schemas/IUser';
+import { Public } from '../common/decorators/public.decorator';
+import { RefreshTokenGuard } from '../common/guards/refreshToken.guard';
+import { ReqUser } from '../common/decorators/user.decorator';
+import { IUser } from '../schemas/IUser';
 import { RefreshDto } from './dto/refresh.dto';
-import { User } from 'src/users/entities/user.entity';
+import { User } from '../users/entities/user.entity';
 
 @Controller('auth')
 export class AuthController {

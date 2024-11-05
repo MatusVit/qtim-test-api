@@ -2,9 +2,9 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { MESSAGE } from 'src/common/constants/massages';
-import { getHash } from 'src/common/utils/hash.utils';
-import { IUser } from 'src/schemas/IUser';
+import { MESSAGE } from '../common/constants/massages';
+import { getHash } from '../common/utils/hash.utils';
+import { IUser } from '../schemas/IUser';
 import { User } from './entities/user.entity';
 
 @Injectable()
@@ -33,7 +33,7 @@ export class UsersService {
   }
 
   async update(user: IUser): Promise<IUser> {
-    const existUser = this.usersRepository.findOneBy({ userId: user.userId });
+    const existUser = await this.usersRepository.findOneBy({ userId: user.userId });
     if (!existUser) throw new ForbiddenException(MESSAGE.USER_NOT_EXIST);
 
     const updatedUser: IUser = {

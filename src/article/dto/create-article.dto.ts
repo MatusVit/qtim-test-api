@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsString } from 'class-validator';
-import { IArticle } from 'src/schemas/IArticle';
+import { IArticle } from '../../schemas/IArticle';
 
 export class CreateArticleDto implements IArticle {
   @IsNotEmpty()

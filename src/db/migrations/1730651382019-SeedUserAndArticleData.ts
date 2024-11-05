@@ -1,4 +1,4 @@
-import { getHash } from 'src/common/utils/hash.utils';
+import { getHash } from '../../common/utils/hash.utils';
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 // ! **** удалить

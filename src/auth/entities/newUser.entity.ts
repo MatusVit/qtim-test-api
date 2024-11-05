@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer';
-import { IUser } from 'src/schemas/IUser';
+import { IUser } from '../../schemas/IUser';
 
 export class UserEntity implements IUser {
   userId: number;

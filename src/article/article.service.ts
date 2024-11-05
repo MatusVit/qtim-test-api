@@ -4,11 +4,11 @@ import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { Article } from './entities/article.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IUser } from 'src/schemas/IUser';
+import { IUser } from '../schemas/IUser';
 import { Repository } from 'typeorm';
 import { ListArticleDto } from './dto/list-article.dto';
 import { ArticlePagination } from './entities/article-pagination.entity';
-import { MESSAGE } from 'src/common/constants/massages';
+import { MESSAGE } from '../common/constants/massages';
 import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Injectable()

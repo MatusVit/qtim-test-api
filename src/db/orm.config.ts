@@ -1,7 +1,7 @@
 import { DataSource } from 'typeorm';
-import { Article } from 'src/article/entities/article.entity';
-import { User } from 'src/users/entities/user.entity';
-import { InitialMigration1730650002384 } from 'src/db/migrations/1730650002384-InitialMigration';
+import { Article } from '../article/entities/article.entity';
+import { User } from '../users/entities/user.entity';
+import { InitialMigration1730650002384 } from '../db/migrations/1730650002384-InitialMigration';
 import { SeedUserAndArticleData1730651382019 } from './migrations/1730651382019-SeedUserAndArticleData';
 
 export const AppDataSource = new DataSource({

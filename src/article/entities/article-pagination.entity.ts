@@ -1,4 +1,4 @@
-import { IPagination } from 'src/schemas/IPagination';
+import { IPagination } from '../../schemas/IPagination';
 import { Article } from './article.entity';
 
 export class ArticlePagination implements IPagination<Article> {

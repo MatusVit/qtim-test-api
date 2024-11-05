@@ -6,8 +6,8 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { IArticle } from 'src/schemas/IArticle';
-import { User } from 'src/users/entities/user.entity';
+import { User } from '../../users/entities/user.entity';
+import { IArticle } from '../../schemas/IArticle';
 
 @Entity('article')
 export class Article implements IArticle {
