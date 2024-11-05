@@ -17,7 +17,7 @@ $ npm install
 
 Copy .env.example to .env
 
-```
+```bash
 $ cp .env.example .env
 ```
 
@@ -28,13 +28,13 @@ PostgresSQL and Redis.
 _Docker must be installed and running on your system._
 
 ```bash
-$ npm up:db:docker
+$ npm run up:db:docker
 ```
 
 Down DB containers
 
 ```bash
-$ npm down:db:docker
+$ npm run down:db:docker
 ```
 
 ## Compile and run the project
